@@ -25,7 +25,11 @@ def _align_columns_as_string(df, columns):
     """
     return df.select(
         [
-            F.col(col).cast("string") if col in df.columns else F.lit(None).cast("string")
+            (
+                F.col(col).cast("string")
+                if col in df.columns
+                else F.lit(None).cast("string")
+            )
             for col in columns
         ]
     )
@@ -38,9 +42,9 @@ def main() -> None:
     silver_base = "johnson_and_johnson/data/silver"
     os.makedirs(silver_base, exist_ok=True)
 
-    maintenance = read_bronze_dataset(spark, bronze_base, "maintenance_events").dropDuplicates(
-        ["event_id"]
-    )
+    maintenance = read_bronze_dataset(
+        spark, bronze_base, "maintenance_events"
+    ).dropDuplicates(["event_id"])
     maintenance.write.mode("overwrite").parquet(
         os.path.join(silver_base, "maintenance_events")
     )
@@ -52,9 +56,9 @@ def main() -> None:
         os.path.join(silver_base, "manufacturing_factory_dataset")
     )
 
-    operators = read_bronze_dataset(spark, bronze_base, "operators_roster").dropDuplicates(
-        ["operator_id"]
-    )
+    operators = read_bronze_dataset(
+        spark, bronze_base, "operators_roster"
+    ).dropDuplicates(["operator_id"])
     operators.write.mode("overwrite").parquet(
         os.path.join(silver_base, "operators_roster")
     )

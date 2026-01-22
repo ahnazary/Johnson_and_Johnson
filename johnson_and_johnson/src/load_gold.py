@@ -11,9 +11,11 @@ def main() -> None:
     os.makedirs(os.path.join(gold_base, "parquet"), exist_ok=True)
 
     # create dim_operators table parquet
-    operators = spark.read.parquet(
-        os.path.join(silver_base, "operators_roster")
-    ).select("operator_id", "name").dropDuplicates(["operator_id"])
+    operators = (
+        spark.read.parquet(os.path.join(silver_base, "operators_roster"))
+        .select("operator_id", "name")
+        .dropDuplicates(["operator_id"])
+    )
 
     # write dim_operators table in parquet format
     operators.write.mode("overwrite").parquet(
@@ -25,8 +27,7 @@ def main() -> None:
         os.path.join(gold_base, "csv/dim_operators")
     )
 
-
-    # join manufacturing_factory_dataset events with operators to create manufacturing_factory_dataset table
+    # join manufacturing_factory_dataset events with operators
     manufacturing_factory_dataset = spark.read.parquet(
         os.path.join(silver_base, "manufacturing_factory_dataset")
     )
@@ -73,6 +74,7 @@ def main() -> None:
     )
 
     spark.stop()
+
 
 if __name__ == "__main__":
     main()
