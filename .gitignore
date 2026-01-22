@@ -9,3 +9,7 @@
 **.log
 finance/src/data**
 .ruff_cache**
+
+johnson_and_johnson/data/bronze
+johnson_and_johnson/data/silver
+johnson_and_johnson/data/gold
