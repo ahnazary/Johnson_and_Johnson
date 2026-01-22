@@ -8,6 +8,12 @@ Install python dependencies using pip:
 pip install -r requirements.txt
 ```
 
+Java is also required to run pyspark. If not installed, install using brew:
+
+```bash
+brew install openjdk@21
+```
+
 ## Task 2
 
 This task requires answer to 5 questions. The answer to questions are pretty simple as thy are simple group by and aggregations. 
@@ -60,3 +66,31 @@ To run the code for Task 2, use the following command:
 ```bash
 python johnson_and_johnson/src/task2.py
 ```
+
+## Task 3
+
+For this task, 3 fils are provided in the `johnson_and_johnson/src/` directory:
+- `load_bronze.py`: Contains a spark job that loads data from `input_data` into `johnson_and_johnson/data/bronze` in 2 directories for csv and parquet files. Basically the data is dumped without any changes. 
+- `load_silver.py`: Contains a spark job that reads data from bronze layer, does some basic transformations (in this case just deduplication) and writes the data to `johnson_and_johnson/data/silver` layer in parquet format.
+- `load_gold.py`: Contains a spark job that reads data from silver layer into dimension and fact tables and writes them to `johnson_and_johnson/data/gold` layer in parquet format. For this task, there are 2 tables:
+    - dim_operators: Contains operator_id and name columns from operators_roster.csv
+    - fct_manufacturing_factory_dataset: Contains all columns from maintenance_events.csv with operator_id column joined from dim_operators table.
+
+### Running the code
+
+run the following commands to execute the ETL pipeline:
+
+```bash
+python johnson_and_johnson/src/load_bronze.py
+python johnson_and_johnson/src/load_silver.py
+python johnson_and_johnson/src/load_gold.py
+```
+
+check out the result in parquet or csv in the respective directories in `johnson_and_johnson/data/` in bronze, silver and gold folders.
+
+# Task 4
+
+Did not have time to implement this task. But the idea would be to write unit tests and integration tests as explained below:
+
+    - Unit tests: For unit tests using packages like mockito or pytest, we would use mocked data to test the functionality of each transformation step in isolation. These tests can be run in github actions as part of CI/CD pipeline to ensure that any changes to the code do not break existing functionality.
+    - Integration tests: For integration tests, we would use a small subset of real data to test the end-to-end data pipeline. This could involve running the entire ETL in development or staging environments. 
